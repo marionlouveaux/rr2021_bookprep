@@ -13,7 +13,7 @@ This repository contains the slides of a presentation of the [package
 {bookprep}](https://github.com/marionlouveaux/bookprep) given at the
 [“Rencontres R” (2021) in Paris](https://paris2021.rencontresr.fr/).
 
-See slides directly: <https://marionlouveaux.github.io/bookprep_slides>
+See slides directly: <https://marionlouveaux.github.io/rr2021_bookprep>
 
 This work is licensed under a [Creative Commons
 Attribution-ShareAlike 4.0 International
