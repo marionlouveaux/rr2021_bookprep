@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>{bookprep}</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Marion Louveaux" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# {bookprep}
+## Création de rapports automatisés avec bookdown<br>et GitLab Pages pour le suivi de projets
+### Marion Louveaux
+### Institut Pasteur
+### 12-07-2021
+
+---
+
+
+
+# {bookprep}, en un mot 
+
+&lt;img src="figures/bookprep_readme.PNG" width="1628" /&gt;
+
+- Basé sur **{bookdown}**   
+- Pour démarrer un rapport plus rapidement et plus efficacement à partir d'une **structure et d'un contenu paramétrisés**    
+- Un exemple minimal de **package R documenté, testé et versionné**           
+
+
+
+&gt;https://github.com/marionlouveaux/bookprep 
+
+
+
+---
+# Contexte : Missions de service 
+
+- **Plateforme de service** en analyse d'images biologiques / analyse de données      
+- **Plusieurs projets en parallèle**   
+- Un projet peut durer plusieurs mois   
+- Un projet peut rester en pause un mois ou deux    
+
+&lt;br&gt;
+&lt;img src="figures/projet.png" width="2645" /&gt;
+
+
+
+???
+Travail pour une plateforme de services en analyse d'images biologiques. Chaque projet commence par une rencontre avec l'utilisateur souhaitant déposer un projet auprès de la plateforme afin de discuter de sa question biologique et de ses besoins et découvrir ses images. Ensuite, le projet commence. Je teste et sélectionne les outils de traitement d'images appropriés pour extraire des informations quantitatives des images, puis je teste et sélectionne les outils d'analyse de données avec R pour répondre aux questions de l'utilisateur. J'automatise autant que possible chaque étape de la chaîne de traitement et d'analyse. 
+
+---
+# Approche : communication centralisée et reproductibilité      
+
+- **Suivi des projets par écrit** (rapport)     
+- Contenu du rapport :   
+    - toutes les étapes de traitement et d'analyse    
+    - tous les échanges autour du projet (mails, réunions...).
+
+.left-column[
+&lt;br&gt;   
+&lt;br&gt;  
+&lt;img src="figures/bookdown_GitLab_pages.png" width="1117" style="display: block; margin: auto;" /&gt;
+]
+
+
+.right-column[
+- Utilisation de {bookdown}
+    - = ensemble structuré de fichiers Rmarkdown   
+    - combine texte et code (analyses et résultats)     
+- **Suivi de version** avec git     
+- **Diffusion via les GitLab pages** 
+    - accès permanent pour tous les membres du projet    
+    - lecture au format html    
+  
+]
+
+
+???
+
+Pour répondre à ces besoins clients, j'ai décidé de...
+
+J'utilise le package R {bookdown} pour écrire un rapport pour le projet. Le package {bookdown} permet de combiner plusieurs fichiers Rmarkdown, et donc de mêler du texte et du code dans un même document.
+Dans ce rapport, je consigne les méthodes utilisées, les choix de paramètres et également tous les échanges avec l'utilisateur au long du projet. Je garde une copie de ces fichiers sur le serveur GitLab de l'institut et j'utilise les GitLab pages pour afficher le rapport au format html. Tous les acteurs du projet ont accès à la page GitLab du rapport dès le démarrage du projet.       
+  
+
+---
+# Problème : démarrage du rapport laborieux  
+
+- Idéalement : rapport commencé dès la première réunion
+- Mais : de nombreux éléments à modifier **à la main**   
+
+&lt;img src="figures/exemple_bookdown1.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
+--
+
+- **Des éléments similaires** entre certains rapports        
+    - Structure commune (chapitres, titres et sous-titres...)      
+    - Informations communes (remerciements, thème des graphiques...)  
+- Un **besoin de flexibilité**   
+   
+=&gt; **Mise en place d'une solution** plus **efficace** et plus **reproductible**. 
+
+
+???
+
+ **Mise en place d'une solution** plus **rapide** et plus **reproductible** qui s'appuie sur ces éléments communs.           
+
+
+- Eviter les taches répétitives et automatisables
+- Reduire les risques d'erreur car tâches peu intéressantes
+- Utiliser mon temps de cerveau pour répondre au besoin plutôt qu'à des copier-coller
+
+
+
+Je commence ce rapport dès la première réunion de discussion des besoins. J'utilise toujours la même structure de rapport et je répète certaines informations d'un rapport à l'autre, notamment un paragraphe rappelant l'importance d'inclure la plateforme dans les remerciements si le projet abouti à une publication scientifique, mais aussi des éléments de code, tels qu'un thème commun pour les graphiques.     
+Problème: le démarrage du rapport est un peu laborieux car je dois modifier de nombreuses informations à la main. 
+
+---
+# {bookprep}
+
+Un document {bookdown} est composé de **deux types de fichiers** : 
+- des fichiers qui structurent le livre = le squelette (**skeleton**)     
+- des fichiers de contenu et d'apparence = le modèle de document (**template**)   
+
+{bookprep} propose une **version paramétrisée** de ces fichiers et donne la **possibilité de fournir ses propres fichiers**. 
+
+
+&lt;img src="figures/fichiers_de_bookprep.png" width="95%" /&gt;
+
+
+&gt;https://github.com/marionlouveaux/bookprep 
+
+
+---
+# Exemple d'application avec {bookprep}
+
+
+```r
+library(bookprep)
+
+prepare_book(
+  path = "chemin/vers/dossier",
+  template = system.file("book_template_example", package = "bookprep"),
+  replacements = c(
+    # Remplacements des variables
+    "book_title" = "Mon projet",
+    "author_name" = "Marion Louveaux",
+    "creation_date" = "`r Sys.Date()`",
+    "short_description" = "Exemple de projet avec {bookprep}.",
+    # On peut ajouter plus de variables si nécessaire (selon les fichiers)
+    "index_title" = "Contexte"
+  )
+)
+```
+
+&gt;https://github.com/marionlouveaux/bookprep 
+
+
+???
+Dans {bookprep} : 
+- les fichiers de structure ne contiennent plus d'informations "en dur", mais des variables modifiables    
+- les fichiers de contenu sont prédéfinis par l'utilisateur du package   
+
+{bookprep} combine les deux types de fichiers et remplace les variables par les informations personnelles de l'utilisateur. 
+
+
+---
+# Exemple d'application avec {bookprep}
+
+&lt;img src="figures/bookprep_test.PNG" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Conclusion
+
+- Un **démarrage plus rapide et plus efficace des rapports** de suivi de projets     
+- De la **reproductibilité**, avec la possibilité de garder des informations communes d'un rapport à l'autre   
+- De la **flexibilité** pour ajuster le rapport aux besoins du projet    
+
+&lt;img src="figures/bookprep_readme.PNG" width="1628" /&gt;
+
+
+&gt;GitHub : https://github.com/marionlouveaux  
+Blog : https://marionlouveaux.fr/ &lt;br&gt;
+Twitter : @MarionLouveaux
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

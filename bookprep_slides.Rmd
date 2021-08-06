@@ -22,8 +22,8 @@ knitr::include_graphics("figures/bookprep_readme.PNG")
 ```
 
 - Basé sur **{bookdown}**   
-- Pour démarrer un rapport plus rapidement et plus efficacement à partir d'une **structure et d'un contenu prédéfini**    
-- Un exemple minimal de package R documenté, testé et versionné          
+- Pour démarrer un rapport plus rapidement et plus efficacement à partir d'une **structure et d'un contenu paramétrisés**    
+- Un exemple minimal de **package R documenté, testé et versionné**           
 
 
 
@@ -39,7 +39,7 @@ knitr::include_graphics("figures/bookprep_readme.PNG")
 - Un projet peut durer plusieurs mois   
 - Un projet peut rester en pause un mois ou deux    
 
-
+<br>
 ```{r, echo=FALSE}
 knitr::include_graphics("figures/projet.png")
 ```
@@ -52,14 +52,11 @@ Travail pour une plateforme de services en analyse d'images biologiques. Chaque 
 ---
 # Approche : communication centralisée et reproductibilité      
 
-**Centralisation** des informations en un seul document :          
 - **Suivi des projets par écrit** (rapport)     
 - Contenu du rapport :   
     - toutes les étapes de traitement et d'analyse    
     - tous les échanges autour du projet (mails, réunions...).
 
-
-**Automatisation** des rapports : 
 .left-column[
 <br>   
 <br>  
@@ -75,13 +72,16 @@ knitr::include_graphics("figures/bookdown_GitLab_pages.png")
     - combine texte et code (analyses et résultats)     
 - **Suivi de version** avec git     
 - **Diffusion via les GitLab pages** 
-    - accès permanent au rapport pour tous les membres du projet    
+    - accès permanent pour tous les membres du projet    
     - lecture au format html    
   
 ]
 
 
 ???
+
+Pour répondre à ces besoins clients, j'ai décidé de...
+
 J'utilise le package R {bookdown} pour écrire un rapport pour le projet. Le package {bookdown} permet de combiner plusieurs fichiers Rmarkdown, et donc de mêler du texte et du code dans un même document.
 Dans ce rapport, je consigne les méthodes utilisées, les choix de paramètres et également tous les échanges avec l'utilisateur au long du projet. Je garde une copie de ces fichiers sur le serveur GitLab de l'institut et j'utilise les GitLab pages pour afficher le rapport au format html. Tous les acteurs du projet ont accès à la page GitLab du rapport dès le démarrage du projet.       
   
@@ -89,24 +89,27 @@ Dans ce rapport, je consigne les méthodes utilisées, les choix de paramètres 
 ---
 # Problème : démarrage du rapport laborieux  
 
-- Idéalement, rapport commencé dès la première réunion
-- Il y a **de nombreux éléments à modifier à la main**   
+- Idéalement : rapport commencé dès la première réunion
+- Mais : de nombreux éléments à modifier **à la main**   
 
 ```{r, echo=FALSE, out.width="70%", fig.align='center'}
 knitr::include_graphics("figures/exemple_bookdown1.gif")
 ```
 
+--
 
-- Certains éléments sont communs à tous les rapports         
+- **Des éléments similaires** entre certains rapports        
     - Structure commune (chapitres, titres et sous-titres...)      
-    - Informations communes (remerciements, thème des graphiques...)   
+    - Informations communes (remerciements, thème des graphiques...)  
+- Un **besoin de flexibilité**   
    
-=> **Besoin d'une solution** plus **rapide et** plus **fiable** qui s'appuie sur ces éléments communs.           
+=> **Mise en place d'une solution** plus **efficace** et plus **reproductible**. 
 
 
 ???
 
-Identifier les points
+ **Mise en place d'une solution** plus **rapide** et plus **reproductible** qui s'appuie sur ces éléments communs.           
+
 
 - Eviter les taches répétitives et automatisables
 - Reduire les risques d'erreur car tâches peu intéressantes
@@ -118,26 +121,42 @@ Je commence ce rapport dès la première réunion de discussion des besoins. J'u
 Problème: le démarrage du rapport est un peu laborieux car je dois modifier de nombreuses informations à la main. 
 
 ---
-# Création de {bookprep}
-
-
-```{r, echo=FALSE}
-knitr::include_graphics("figures/fichiers_de_bookprep.png")
-```
-
+# {bookprep}
 
 Un document {bookdown} est composé de **deux types de fichiers** : 
 - des fichiers qui structurent le livre = le squelette (**skeleton**)     
 - des fichiers de contenu et d'apparence = le modèle de document (**template**)   
 
+{bookprep} propose une **version paramétrisée** de ces fichiers et donne la **possibilité de fournir ses propres fichiers**. 
+
+
+```{r, echo=FALSE, out.width="95%"}
+knitr::include_graphics("figures/fichiers_de_bookprep.png")
+```
+
+
 >https://github.com/marionlouveaux/bookprep 
 
 
 ---
-# Création de {bookprep}
+# Exemple d'application avec {bookprep}
 
-```{r, echo=FALSE}
-knitr::include_graphics("figures/prepare_book.png")
+```{r, echo=TRUE, eval=FALSE}
+library(bookprep)
+
+prepare_book(
+  path = "chemin/vers/dossier",
+  template = system.file("book_template_example", package = "bookprep"),
+  replacements = c(
+    # Remplacements des variables
+    "book_title" = "Mon projet",
+    "author_name" = "Marion Louveaux",
+    "creation_date" = "`r Sys.Date()`",
+    "short_description" = "Exemple de projet avec {bookprep}.",
+    # On peut ajouter plus de variables si nécessaire (selon les fichiers)
+    "index_title" = "Contexte"
+  )
+)
 ```
 
 >https://github.com/marionlouveaux/bookprep 
@@ -151,6 +170,29 @@ Dans {bookprep} :
 {bookprep} combine les deux types de fichiers et remplace les variables par les informations personnelles de l'utilisateur. 
 
 
+---
+# Exemple d'application avec {bookprep}
+
+```{r, echo=FALSE, out.width="80%", fig.align='center'}
+knitr::include_graphics(path = "figures/bookprep_test.PNG")
+```
+
+
+---
+# Conclusion
+
+- Un **démarrage plus rapide et plus efficace des rapports** de suivi de projets     
+- De la **reproductibilité**, avec la possibilité de garder des informations communes d'un rapport à l'autre   
+- De la **flexibilité** pour ajuster le rapport aux besoins du projet    
+
+```{r, echo=FALSE}
+knitr::include_graphics("figures/bookprep_readme.PNG")
+```
+
+
+>GitHub : https://github.com/marionlouveaux  
+Blog : https://marionlouveaux.fr/ <br>
+Twitter : @MarionLouveaux
 
 
 
